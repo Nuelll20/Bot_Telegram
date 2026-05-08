@@ -6,21 +6,29 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel("gemini-1.5-flash")
 
 def summarize_news(title, description):
-    prompt = f"""
-    Ringkas berita berikut ke Bahasa Indonesia dengan gaya profesional dan singkat.
+    try:
+        prompt = f"""
+        Anda adalah editor berita profesional.
 
-    Judul:
-    {title}
+        Ringkas berita berikut ke Bahasa Indonesia.
 
-    Isi:
-    {description}
+        Maksimal 2-3 kalimat.
+        Gunakan bahasa formal dan profesional.
 
-    Format:
-    - Maksimal 3 kalimat
-    - Mudah dipahami
-    - Profesional
-    """
+        Judul:
+        {title}
 
-    response = model.generate_content(prompt)
+        Isi:
+        {description}
+        """
 
-    return response.text.strip()
+        response = model.generate_content(prompt)
+
+        print("=== GEMINI RESPONSE ===")
+        print(response.text)
+
+        return response.text.strip()
+
+    except Exception as e:
+        print("ERROR GEMINI:", e)
+        return description
