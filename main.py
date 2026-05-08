@@ -41,13 +41,16 @@ from scheduler.jobs import (
 # ─── Logging ──────────────────────────────────────────────────────────────────
 logging.basicConfig(
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
-    level=logging.INFO,
+    level=logging.WARNING,
     handlers=[
         logging.StreamHandler(),
         logging.FileHandler("bot.log", encoding="utf-8"),
     ]
 )
 logger = logging.getLogger(__name__)
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("telegram").setLevel(logging.WARNING)
+logging.getLogger("apscheduler").setLevel(logging.WARNING)
 
 
 def parse_schedule_time(time_str: str):
