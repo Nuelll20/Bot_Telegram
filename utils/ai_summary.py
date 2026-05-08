@@ -24,8 +24,6 @@ def summarize_news(title, description):
 
         response = model.generate_content(prompt)
 
-        print("=== GEMINI RESPONSE ===")
-        print(response.text)
 
         return response.text.strip()
 

@@ -50,7 +50,7 @@ def _parse_feed(url: str) -> List[Dict]:
         feed = feedparser.parse(url)
         results = []
 
-        for entry in feed.entries:
+        for index, entry in enumerate(feed.entries):
             if not _is_recent(entry):
                 continue
 
@@ -79,10 +79,6 @@ def _parse_feed(url: str) -> List[Dict]:
                 results.append(item)
 
         return results
-
-    except Exception as e:
-        logger.warning(f"Gagal parse feed {url}: {e}")
-        return []
 
     except Exception as e:
         logger.warning(f"Gagal parse feed {url}: {e}")
