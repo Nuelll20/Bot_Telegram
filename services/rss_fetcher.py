@@ -58,10 +58,14 @@ def _parse_feed(url: str) -> List[Dict]:
                 entry.get("summary", entry.get("description", ""))
             )
 
-            ai_summary = summarize_news(
-                entry.get("title", "").strip(),
-                raw_summary
-            )
+            try:
+                ai_summary = summarize_news(
+                    entry.get("title", "").strip(),
+                    raw_summary
+                )
+            except Exception as e:
+                logger.warning(f"AI summary gagal: {e}")
+                ai_summary = raw_summary
 
             item = {
                 "title": entry.get("title", "").strip(),
@@ -75,6 +79,10 @@ def _parse_feed(url: str) -> List[Dict]:
                 results.append(item)
 
         return results
+
+    except Exception as e:
+        logger.warning(f"Gagal parse feed {url}: {e}")
+        return []
 
     except Exception as e:
         logger.warning(f"Gagal parse feed {url}: {e}")
