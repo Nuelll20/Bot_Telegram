@@ -9,6 +9,7 @@ import logging
 from datetime import datetime, timezone, timedelta
 from typing import List, Dict, Optional
 from config.settings import KLUB_EROPA
+from utils.ai_summary import summarize_news
 
 logger = logging.getLogger(__name__)
 
@@ -48,21 +49,33 @@ def _parse_feed(url: str) -> List[Dict]:
     try:
         feed = feedparser.parse(url)
         results = []
+
         for entry in feed.entries:
             if not _is_recent(entry):
                 continue
+
+            raw_summary = _clean_summary(
+                entry.get("summary", entry.get("description", ""))
+            )
+
+            ai_summary = summarize_news(
+                entry.get("title", "").strip(),
+                raw_summary
+            )
+
             item = {
                 "title": entry.get("title", "").strip(),
                 "link":  entry.get("link", ""),
-                "summary": _clean_summary(
-                    entry.get("summary", entry.get("description", ""))
-                ),
+                "summary": ai_summary,
                 "source": feed.feed.get("title", url),
                 "published": entry.get("published", ""),
             }
+
             if item["title"] and item["link"]:
                 results.append(item)
+
         return results
+
     except Exception as e:
         logger.warning(f"Gagal parse feed {url}: {e}")
         return []
