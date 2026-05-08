@@ -101,14 +101,17 @@ def setup_scheduler(app: Application):
 def validate_config():
     """Validasi konfigurasi wajib."""
     errors = []
-    if not TELEGRAM_BOT_TOKEN or TELEGRAM_BOT_TOKEN == "your_telegram_bot_token_here":
-        errors.append("❌ TELEGRAM_BOT_TOKEN belum diisi di file .env")
-    if not TELEGRAM_CHAT_ID or TELEGRAM_CHAT_ID == "your_channel_or_group_id_here":
-        errors.append("❌ TELEGRAM_CHAT_ID belum diisi di file .env")
+
+    if not TELEGRAM_BOT_TOKEN:
+        errors.append("❌ TELEGRAM_BOT_TOKEN tidak ditemukan")
+
+    if not TELEGRAM_CHAT_ID:
+        errors.append("❌ TELEGRAM_CHAT_ID tidak ditemukan")
+
     if errors:
         for e in errors:
             print(e)
-        print("\n💡 Salin .env.example ke .env dan isi konfigurasi yang diperlukan.")
+
         raise SystemExit(1)
 
 
